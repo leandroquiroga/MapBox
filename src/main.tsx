@@ -1,9 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx';
+import { MapBox } from './MapBox.tsx';
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+import './App.css'
+
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+    <MapBox />
+  </React.StrictMode>
+);
