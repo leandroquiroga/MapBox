@@ -1,6 +1,16 @@
 *{
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.loading-map{
+  background-color: #202020;
+  color: #FFF;
+  height: 100vh;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100vw;
 }

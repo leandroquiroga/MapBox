@@ -1,5 +1,7 @@
+import { useEffect, useReducer } from "react";
+import { PlacesContext, placesReducer } from "."
 import { PlacesProps, PlacesStates } from "../interfaces/interfaces"
-import { PlacesContext } from "./PlacesContext"
+import { getUserLocation } from "../helpers";
 
 // Informacion que se almacena en memoria
 const INITAL_STATE: PlacesStates = {
@@ -8,12 +10,19 @@ const INITAL_STATE: PlacesStates = {
 }
 
 export const PlacesProvider = ({ children }: PlacesProps) => {
+
+  const [state, dispatch] = useReducer(placesReducer, INITAL_STATE);
+
+  useEffect(() => { 
+    getUserLocation()
+      .then(data => {
+        dispatch({ type: "setUserLocation", payload: data })
+      }).catch(err => {
+        throw new Error(err);
+      })
+  },[]);
   return (
-    <PlacesContext.Provider
-      value={{
-        isLoading: true,
-        userLocation: undefined,
-      }}>
+    <PlacesContext.Provider value={{...state}}>
         {children}
     </PlacesContext.Provider>
   );
