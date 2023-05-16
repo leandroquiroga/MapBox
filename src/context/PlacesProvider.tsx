@@ -1,6 +1,7 @@
 import { useEffect, useReducer } from "react";
-import { PlacesContext, placesReducer } from "."
+import { PlacesContext } from "."
 import { PlacesProps, PlacesStates } from "../interfaces/interfaces"
+import { placesReducer } from "./placesReducer";
 import { getUserLocation } from "../helpers";
 
 // Informacion que se almacena en memoria
