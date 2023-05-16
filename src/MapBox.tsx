@@ -1,10 +1,12 @@
-import { PlacesProvider } from './context';
+import { MapsProvider, PlacesProvider } from './context';
 import { HomePage } from './pages/HomePage';
 
 export const MapBox = (): JSX.Element => {
   return (
     <PlacesProvider>
-      <HomePage />
+      <MapsProvider>
+        <HomePage />
+      </MapsProvider>
     </PlacesProvider>
   )
 }
