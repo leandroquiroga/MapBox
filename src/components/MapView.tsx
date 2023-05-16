@@ -1,4 +1,6 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react"
+import { Map } from "mapbox-gl";
+
 import { PlacesContext } from "../context"
 import { Loading } from ".";
 
@@ -6,10 +8,25 @@ export const MapView = (): JSX.Element => {
 
   const [localitation, setLocalitation] = useState<number[]>();
   const { isLoading, userLocation } = useContext(PlacesContext);
-  
+  // Mantenemos la referencia del elemento ya que puede existir mas de un
+  // mapa, es por eso que se utiliza la referencia del elemento
+  const mapDiv = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     setLocalitation(userLocation);
   }, [userLocation]);
+
+  useLayoutEffect(() => {
+    if (!isLoading) {
+      const map = new Map({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        container: mapDiv.current!,
+        style: "mapbox://styles/mapbox/streets-v12", 
+        center: userLocation,
+        zoom: 14,
+      });
+    }
+  }, [isLoading, userLocation])
 
 
   // Agregar un spinner de carga y crear un componente
@@ -19,7 +36,16 @@ export const MapView = (): JSX.Element => {
 
   return (
     <>
-      <section>{localitation?.join(', ')}</section>
+      <section
+        ref={mapDiv}
+        style={{
+          height: '100vh',
+          width: '100vw',
+          position: 'fixed',
+          top: 0,
+          left: 0
+        }} 
+      >{localitation?.join(", ")}</section>
     </>
   );
 }
