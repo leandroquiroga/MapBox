@@ -39,6 +39,7 @@ export const MapView = (): JSX.Element => {
 
   return (
     <>
+      {/* Crear componente de de vistas */}
       <section
         ref={mapDiv}
         style={{
