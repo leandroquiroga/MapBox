@@ -11,7 +11,7 @@ if (!navigator.geolocation) {
   throw new Error('Tu navegador no tiene la opcion de Geolocation');
 }
 
-mapboxgl.accessToken = "pk.eyJ1IjoibGVhbmRldjE0IiwiYSI6ImNsaHBpZzc4ODBpd3Mzb2xwcnJwZHBpbjQifQ.Xex3uSdDU5cVXFY4C5fOUQ";
+mapboxgl.accessToken = import.meta.env.VITE_TOKEN_MAPBOX;
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
