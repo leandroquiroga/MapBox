@@ -1,4 +1,4 @@
-import { Map } from "mapbox-gl";
+import { Map, Marker } from "mapbox-gl";
 
 export interface PlacesProps {
   children: JSX.Element | JSX.Element[];
@@ -77,6 +77,7 @@ export interface MapProps {
 export interface MapState {
   isMapReady: boolean;
   map?: Map;
+  markers: Marker[];
 }
 export interface MapsContextProps {
   isMapReady: boolean;
