@@ -29,7 +29,10 @@ export const PlacesProvider = ({ children }: PlacesProps) => {
   const searchPlacesByQuery = async (query: string): Promise<Feature[]> => {
     
     // Verifica la longitud de la query
-    if (query.length === 0) return []; //TODO: Limpiar state
+    if (query.length === 0) {
+      dispatch({type:"setPlaces", payload: []});
+      return []
+    } //TODO: Limpiar state
 
     // Verifica si la ubicacion no existe
     if (!state.userLocation) throw new Error('La ubicacion no existe');
