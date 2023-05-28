@@ -1,4 +1,9 @@
-import { BtnRetunLocation, MapView, SearchLocation } from "../components"
+import {
+  BtnRetunLocation,
+  MapView,
+  SearchLocation,
+  ButtonRoutingProfile,
+} from "../components";
 
 export const HomePage = (): JSX.Element => {
   return (
@@ -6,6 +11,7 @@ export const HomePage = (): JSX.Element => {
       <MapView />
       <BtnRetunLocation />
       <SearchLocation />
+      <ButtonRoutingProfile />
     </>
-  )
+  );
 }

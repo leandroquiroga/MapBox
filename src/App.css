@@ -15,6 +15,18 @@
   width: 100vw;
 }
 
+.input-customer-radio{
+  background-color: transparent;
+  border-radius: 8px;
+  z-index: 1000;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 20px;
+  right: 15px;
+  padding: 4px;
+}
+
 .search-container{
   background-color: #FFF;
   border-radius: 10px;  

@@ -5,8 +5,8 @@ import { Feature } from "../interfaces/interfaces";
 
 export const SearchResult = () => {
 
-  const { places, isLoadingPlaces } = useContext(PlacesContext);
-  const { isMapReady, map } = useContext(MapsContext);
+  const { places, isLoadingPlaces, userLocation } = useContext(PlacesContext);
+  const { isMapReady, map, getRouteBetweenProvider } = useContext(MapsContext);
   const [placeID, setPlaceID] = useState('');
   
   
@@ -25,6 +25,19 @@ export const SearchResult = () => {
 
   const changeClassName = (place: Feature): boolean => (placeID === place.id) ? true : false 
 
+  const handleGetRoute = (place: Feature) => {  
+
+    if (!userLocation) return;
+    // Extrameos la longitud y latitud del destino
+    const [lng, lat] = place.center;
+
+    //TODO: Chequar si el mapa esta cargado
+      
+      //TODO: Activar un componente checkbox para seleccionar el tipo de ruta
+      //TODO: Setear la opcion seleccionada por el usuario para hacer la peticion
+    getRouteBetweenProvider(userLocation, [lng, lat]);
+
+  }
   if (isLoadingPlaces) {
     return <Spinner />
   }
@@ -37,10 +50,8 @@ export const SearchResult = () => {
       {places.map((place) => (
         <li
           key={place.id}
-          className={
-            `list-group-item list-group-item-action cursor-pointer 
-            ${changeClassName(place) ? `active` : ``}`
-          }
+          className={`list-group-item list-group-item-action cursor-pointer 
+            ${changeClassName(place) ? `active` : ``}`}
           onClick={() => handleFlyTo(place)}>
           <h6> {place.text_es}</h6>
           <p
@@ -54,6 +65,7 @@ export const SearchResult = () => {
           </p>
 
           <button
+            onClick={() => handleGetRoute(place)}
             className={`${
               changeClassName(place)
                 ? `btn btn-outline-light btn-sm`
