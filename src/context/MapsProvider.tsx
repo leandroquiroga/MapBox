@@ -1,10 +1,11 @@
 import { useContext, useEffect, useReducer } from 'react';
 import { Map, Marker, Popup } from 'mapbox-gl';
 
-import { MapProps, MapState } from '../interfaces/interfaces';
+import { MapProps, MapState, ReponseDirections } from '../interfaces/interfaces';
 import { MapsContext } from "./MapsContext";
 import { mapReducer } from "./mapsReducer";
 import { PlacesContext } from '.';
+import { directionsApi } from '../api';
 
 const INITIAL_STATE: MapState = {
   isMapReady: false,
@@ -66,9 +67,36 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
     
     dispatch({ type: 'setMap', payload: map })
   };
+
+  const getRouteBetweenProvider = async ( start: [number, number], end: [number, number]) => {
+    
+    // let kilometers: number;
+    
+    const response = await directionsApi.get<ReponseDirections>(
+      `/driving/${start.join(",")};${end.join(",")}`
+    );
+    console.log(response);
+
+    //Conversion de los kilometros
+    // const {distance, duration, geometry} = response.data.routes[0]
+    // kilometers = distance / 1000;
+    // kilometers = Math.round(kilometers * 1000);
+    // kilometers = kilometers / 1000;
+
+    // Total del tiempo
+    // const minutes: number = Math.floor(duration / 60);
+
+    // console.log({kilometers, minutes});
+  };
+
   
   return (
-    <MapsContext.Provider value={{ ...state, setMap }}>
+    <MapsContext.Provider
+      value={{
+        ...state,
+        setMap,
+        getRouteBetweenProvider,
+      }}>
       {children}
     </MapsContext.Provider>
   );
