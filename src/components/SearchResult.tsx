@@ -1,50 +1,60 @@
-import { useContext, useState } from "react"
+import { Dispatch, SetStateAction, useContext, useState } from "react"
 import { MapsContext, PlacesContext } from "../context"
 import { Spinner } from "./";
 import { Feature } from "../interfaces/interfaces";
 
-export const SearchResult = () => {
-
+export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<SetStateAction<boolean>>}) => {
   const { places, isLoadingPlaces, userLocation } = useContext(PlacesContext);
-  const { isMapReady, map, getRouteBetweenProvider } = useContext(MapsContext);
-  const [placeID, setPlaceID] = useState('');
-  
-  
+  const {
+    isMapReady,
+    map,
+    getRouteBetweenProvider,
+    routingProfile,
+    setRoutingProfile,
+    setBookmarked,
+  } = useContext(MapsContext);
+  const [placeID, setPlaceID] = useState("");
+
   const handleFlyTo = (place: Feature) => {
     if (isMapReady) {
       const [lng, lat] = place.center;
-      setPlaceID(place.id)
+      setPlaceID(place.id);
       map?.flyTo({
         zoom: 14,
         center: [lng, lat],
-        essential: true
+        essential: true,
       });
-      return
+      return;
     }
   };
 
-  const changeClassName = (place: Feature): boolean => (placeID === place.id) ? true : false 
+  const changeClassName = (place: Feature): boolean =>
+    placeID === place.id ? true : false;
 
-  const handleGetRoute = (place: Feature) => {  
-
+  // Crea la ruta entre dos puntos
+  const handleGetRoute = (place: Feature) => {
     if (!userLocation) return;
     // Extrameos la longitud y latitud del destino
     const [lng, lat] = place.center;
 
     //TODO: Chequar si el mapa esta cargado
-      
+    if (!isLoadingPlaces) {
       //TODO: Activar un componente checkbox para seleccionar el tipo de ruta
+      setBookmarked(true);
       //TODO: Setear la opcion seleccionada por el usuario para hacer la peticion
-    getRouteBetweenProvider(userLocation, [lng, lat]);
+      getRouteBetweenProvider(userLocation, [lng, lat]);
 
-  }
+      setPlaceContainer(false);
+    }
+  };
   if (isLoadingPlaces) {
-    return <Spinner />
+    return <Spinner />;
   }
 
   if (places.length === 0) {
-    return <></>
+    return <></>;
   }
+
   return (
     <ul className="list-group mt-3">
       {places.map((place) => (
@@ -77,4 +87,4 @@ export const SearchResult = () => {
       ))}
     </ul>
   );
-}
+};

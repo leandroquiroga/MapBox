@@ -1,5 +1,5 @@
-import { useContext, useEffect, useReducer } from 'react';
-import { Map, Marker, Popup } from 'mapbox-gl';
+import { useContext, useEffect, useReducer, useState } from 'react';
+import { AnySourceData, LngLatBounds, Map, Marker, Popup } from 'mapbox-gl';
 
 import { MapProps, MapState, ReponseDirections } from '../interfaces/interfaces';
 import { MapsContext } from "./MapsContext";
@@ -17,6 +17,13 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
   
   const [state, dispatch] = useReducer(mapReducer, INITIAL_STATE);
   const { places } = useContext(PlacesContext);
+  const [routingProfile, setRoutingProfile] = useState<string>("driving");
+  const [bookmarked, setBookmarked] = useState<boolean>(false)
+
+
+  useEffect(() => {
+    if (places.length === 0) setBookmarked(false)
+  }, [places]);
 
   useEffect(() => {
     // Chequea si hay lugares, sino lo hay lo elimina del mapa y no del estado.
@@ -73,12 +80,14 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
     // let kilometers: number;
     
     const response = await directionsApi.get<ReponseDirections>(
-      `/driving/${start.join(",")};${end.join(",")}`
+      `/${routingProfile}/${start.join(",")};${end.join(",")}`
     );
-    console.log(response);
 
+    const { geometry } = response.data.routes[0];
+    const { coordinates } = geometry;
+
+    
     //Conversion de los kilometros
-    // const {distance, duration, geometry} = response.data.routes[0]
     // kilometers = distance / 1000;
     // kilometers = Math.round(kilometers * 1000);
     // kilometers = kilometers / 1000;
@@ -87,6 +96,60 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
     // const minutes: number = Math.floor(duration / 60);
 
     // console.log({kilometers, minutes});
+
+    // Creamos los bounce para que el mapa se posione en la posicion entre dos puntos
+    const bounds = new LngLatBounds(start, start);
+
+    for ( const coord of coordinates) {
+      const newCoord: [number, number] = [coord[0], coord[1]];
+      bounds.extend(newCoord);
+    }
+
+    state.map?.fitBounds(bounds, {
+      animate: true,
+      padding: 150,
+    });
+
+    //Configuracion de la polyline
+    const sourceData: AnySourceData = {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "LineString",
+              coordinates,
+            },
+          },
+        ],
+      },
+    };
+
+    // Eliminamos la polyline si ya existe 
+    if (state.map?.getLayer("RouteString")) {
+      state.map?.removeLayer("RouteString");
+      state.map?.removeSource("RouteString");
+    }
+      state.map?.addSource("RouteString", sourceData);
+
+    // Configuramos el estilo de la polyline
+    state.map?.addLayer({
+      id: "RouteString",
+      type: "line",
+      source: "RouteString",
+      layout: {
+        'line-cap': 'square',
+        'line-join': 'round',
+      },
+      paint: {
+        'line-color': 'black',
+        'line-width': 4,
+      }
+    });
+
   };
 
   
@@ -95,6 +158,10 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
       value={{
         ...state,
         setMap,
+        routingProfile,
+        setRoutingProfile,
+        bookmarked,
+        setBookmarked,
         getRouteBetweenProvider,
       }}>
       {children}
