@@ -1,4 +1,5 @@
 import { Map, Marker } from "mapbox-gl";
+import { Dispatch, SetStateAction } from "react";
 
 export interface PlacesProps {
   children: JSX.Element | JSX.Element[];
@@ -198,6 +199,10 @@ export interface MapsContextProps {
     start: [number, number],
     end: [number, number]
   ) => Promise<void>;
+  routingProfile: string;
+  setRoutingProfile: Dispatch<SetStateAction<string>>;
+  bookmarked: boolean;
+  setBookmarked: Dispatch<SetStateAction<boolean>>;
 }
 
 
