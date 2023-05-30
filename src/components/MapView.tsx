@@ -7,7 +7,7 @@ import { Loading } from ".";
 export const MapView = (): JSX.Element => {
 
   const [localitation, setLocalitation] = useState<number[]>();
-  const { isLoading, userLocation } = useContext(PlacesContext);
+  const { isLoading, userLocation, showFooter } = useContext(PlacesContext);
   const { setMap } = useContext(MapsContext);
   // Mantenemos la referencia del elemento ya que puede existir mas de un
   // mapa, es por eso que se utiliza la referencia del elemento
@@ -18,7 +18,7 @@ export const MapView = (): JSX.Element => {
   }, [userLocation]);
 
   useLayoutEffect(() => {
-    if (!isLoading ) {
+    if (!isLoading) {
       const map = new Map({
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         container: mapDiv.current!,
@@ -27,8 +27,10 @@ export const MapView = (): JSX.Element => {
         zoom: 14,
       });
 
-      setMap(map)
+      setMap(map);
     }
+
+    // Eliminamos la polyline si ya existe
   }, [isLoading, userLocation]);
 
 
@@ -39,17 +41,11 @@ export const MapView = (): JSX.Element => {
 
   return (
     <>
-      {/* Crear componente de de vistas */}
       <section
         ref={mapDiv}
-        style={{
-          height: '100vh',
-          width: '100vw',
-          position: 'fixed',
-          top: 0,
-          left: 0
-        }} 
-      >{localitation?.join(", ")}</section>
+        className={`${showFooter ? `container_map` : `container_map_full`}`}>
+        {localitation?.join(", ")}
+      </section>
     </>
   );
 }

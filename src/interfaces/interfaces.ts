@@ -180,7 +180,12 @@ export interface PlacesContextProps {
   userLocation?: [number, number];
   isLoadingPlaces: boolean;
   places: Feature[];
+  inputValue: string;
+  setInputValue: Dispatch<SetStateAction<string>>;
+  showFooter: boolean;
+  setShowFooter: Dispatch<SetStateAction<boolean>>;
   searchPlacesByQuery: (query: string) => Promise<Feature[]>;
+  toogleShowComponent: () => void;
 }
 
 export interface MapProps {

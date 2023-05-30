@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { PlacesContext } from "."
 import { Feature, PlacesProps, PlacesStates, ResponseLocation } from "../interfaces/interfaces"
 import { placesReducer } from "./placesReducer";
@@ -16,6 +16,10 @@ const INITAL_STATE: PlacesStates = {
 export const PlacesProvider = ({ children }: PlacesProps) => {
 
   const [state, dispatch] = useReducer(placesReducer, INITAL_STATE);
+  const [inputValue, setInputValue] = useState<string>('');
+  const [showFooter, setShowFooter] = useState<boolean>(false);
+
+  const toogleShowComponent = () => setShowFooter(!showFooter);
 
   useEffect(() => { 
     getUserLocation()
@@ -56,6 +60,11 @@ export const PlacesProvider = ({ children }: PlacesProps) => {
       value={{
         ...state,
         searchPlacesByQuery,
+        inputValue,
+        setInputValue,
+        showFooter,
+        setShowFooter,
+        toogleShowComponent,
       }}>
       {children}
     </PlacesContext.Provider>
