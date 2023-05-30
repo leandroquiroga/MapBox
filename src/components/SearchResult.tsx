@@ -4,7 +4,13 @@ import { Spinner } from "./";
 import { Feature } from "../interfaces/interfaces";
 
 export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<SetStateAction<boolean>>}) => {
-  const { places, isLoadingPlaces, userLocation } = useContext(PlacesContext);
+  const {
+    places,
+    isLoadingPlaces,
+    userLocation,
+    setInputValue,
+    toogleShowComponent
+  } = useContext(PlacesContext);
   const {
     isMapReady,
     map,
@@ -20,10 +26,15 @@ export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<
       const [lng, lat] = place.center;
       setPlaceID(place.id);
       map?.flyTo({
-        zoom: 14,
+        zoom: 12,
         center: [lng, lat],
         essential: true,
+        padding: 100
       });
+
+      setInputValue(place.text_es);
+      setPlaceContainer(false);
+      setBookmarked(true);
       return;
     }
   };
@@ -45,6 +56,9 @@ export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<
       getRouteBetweenProvider(userLocation, [lng, lat]);
 
       setPlaceContainer(false);
+
+      //TODO: Cambiar el toogle, ya que no es conveninte para ciertas vistas
+      // toogleShowComponent()
     }
   };
   if (isLoadingPlaces) {

@@ -11,7 +11,8 @@ export const ButtonRoutingProfile = (): JSX.Element => {
         <button
           value={route}
           className="btn btn-light btn-sm my-1 rounded-3"
-          key={index}>
+          key={index}
+        >
           <IconButton routeProfile={route} />
         </button>
       ))}

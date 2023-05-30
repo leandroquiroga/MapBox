@@ -28,31 +28,29 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
   useEffect(() => {
     // Chequea si hay lugares, sino lo hay lo elimina del mapa y no del estado.
     if (places.length === 0) state.markers.forEach((marker) => marker.remove());
-  
+
     // Creamos una constante para almacenar los nuevos marcadores
     const newMarkers: Marker[] = [];
 
     for (const place of places) {
       const [lng, lat] = place.center;
 
-      const popup = new Popup()
-        .setHTML(`
+      const popup = new Popup().setHTML(`
         <h6>${place.text_es}</h6>
         <p>${place.place_name_es}</p>
-        `)
-      
+        `);
+
       const newMarker = new Marker()
         .setPopup(popup)
         .setLngLat([lng, lat])
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        .addTo(state.map!)
+        .addTo(state.map!);
 
-      
       newMarkers.push(newMarker);
 
       dispatch({ type: "setMarkers", payload: newMarkers });
     }
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [places]);
   
   const setMap = (map: Map) => {
@@ -107,7 +105,8 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
 
     state.map?.fitBounds(bounds, {
       animate: true,
-      padding: 150,
+      padding: 200,
+      zoom: 12,
     });
 
     //Configuracion de la polyline

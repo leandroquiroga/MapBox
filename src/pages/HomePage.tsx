@@ -1,22 +1,15 @@
 import { useContext } from "react";
-import {
-  BtnRetunLocation,
-  MapView,
-  SearchLocation,
-  ButtonRoutingProfile,
-} from "../components";
-import { MapsContext } from "../context";
+import { Layaout} from "../components";
+import { Footer } from "./Footer";
+import { PlacesContext } from "../context";
 
 export const HomePage = (): JSX.Element => {
-  const { bookmarked } = useContext(MapsContext);
+
+  const { showFooter } = useContext(PlacesContext);
   return (
-    <>
-      <MapView />
-      <BtnRetunLocation />
-      <SearchLocation />
-      {
-        bookmarked && <ButtonRoutingProfile />
-      }
-    </>
+    <section>
+        <Layaout />
+      {(showFooter) && <Footer />}
+    </section>
   );
 }

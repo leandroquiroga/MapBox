@@ -4,7 +4,7 @@ import { SearchResult } from "./SearchResult";
 
 export const SearchLocation = () => {
 
-  const { searchPlacesByQuery } = useContext(PlacesContext);
+  const { searchPlacesByQuery, inputValue, setInputValue } = useContext(PlacesContext);
   const [placeContainer, setPlaceContainer] = useState<boolean>(false);
   // Creacion del debounce
   const debounce = useRef<NodeJS.Timeout>();
@@ -15,16 +15,20 @@ export const SearchLocation = () => {
     // Verificamos si hay un valor
     if (debounce.current) clearTimeout(debounce.current);
 
+    setInputValue(event.target.value);
+  
     debounce.current = setTimeout(() => {
-      searchPlacesByQuery(event.target.value)
-    }, 800);
+      searchPlacesByQuery(inputValue)
+    }, 300);
 
     setPlaceContainer(true);
   };
+
   return (
     <section className="search-container">
       <input
         type="text"
+        value={inputValue}
         className="form-control"
         onChange={onQueryChanged}
         placeholder="Busque su destino"
