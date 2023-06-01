@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { useContext, useEffect, useReducer, useState } from 'react';
-import { AnySourceData, LngLatBounds, Map, Marker, Popup } from 'mapbox-gl';
+import { LngLatBounds, Map, Marker, Popup } from 'mapbox-gl';
 
 import { MapProps, MapState } from '../interfaces/interfaces';
 import { MapsContext } from "./MapsContext";
 import { mapReducer } from "./mapsReducer";
 import { PlacesContext } from '.';
 import { directionService } from '../services/direction_services';
+import { removeLayersAndSource, createSourceData, createLayerAndSource } from "../helpers";
 
 const INITIAL_STATE: MapState = {
   isMapReady: false,
@@ -73,149 +75,53 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
     dispatch({ type: 'setMap', payload: map })
   };
 
-  const createPolyline = (coordinates: number[]) => {
-    //Configuracion de la polyline
-    const sourceData: AnySourceData = {
-      type: "geojson",
-      data: {
-        type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            properties: {},
-            geometry: {
-              type: "LineString",
-              coordinates,
-            },
-          },
-        ],
-      },
-    };
+  const createPolyline = (coordinates: number[], route?: string) => {
 
-    // TODO: Verificar el error de eliminar el routing profile existente de manera mas eficiente
-    switch (routingProfile) {
-      case "driving":
-        //TODO: Preguntar si ya existe, si existe elimarlo;
-        // Eliminamos la polyline si ya existe
-        if (state.map?.getLayer("WalkingRouting")) {
-          state.map?.removeSource("WalkingRouting");
-          state.map?.removeLayer("WalkingRouting");
-        }
-        if (state.map?.getLayer("DrivingRouting")) {
-          state.map?.removeLayer("DrivingRouting");
-          state.map?.removeSource("DrivingRouting");
-        }
+    const sourceData = createSourceData(coordinates);
+    
+    // Chequeamos si existe la ruta 
+    if (route) {
+      switch (route) {
+          case "driving":
+            // Eliminamos la polyline si ya existe
+            removeLayersAndSource(state.map!);
+            createLayerAndSource(
+              state,
+              sourceData,
+              "DrivingRouting",
+              "black"
+            );
+            return;
+          case "walking":
+            // Eliminamos la polyline si ya existe
+            removeLayersAndSource(state.map!);
+            createLayerAndSource(state, sourceData, "WalkingRouting", "red");
+            return;
 
-
-        if (state.map?.getLayer("CyclingRouting")) {
-          state.map?.removeSource("CyclingRouting");
-          state.map?.removeLayer("CyclingRouting");
-        }
-
-
-        state.map?.addSource("DrivingRouting", sourceData);
-        // Configuramos el estilo de la polyline
-        state.map?.addLayer({
-          id: "DrivingRouting",
-          type: "line",
-          source: "DrivingRouting",
-          layout: {
-            "line-cap": "square",
-            "line-join": "round",
-          },
-          paint: {
-            "line-color": "black",
-            "line-width": 4,
-          },
-        });
-        return;
-      case "walking":
-        // Eliminamos la polyline si ya existe
-        if (state.map?.getLayer("DrivingRouting")) {
-          state.map?.removeLayer("DrivingRouting");
-          state.map?.removeSource("DrivingRouting");
-        }
-
-        if (state.map?.getLayer("WalkingRouting")) {
-          state.map?.removeSource("WalkingRouting");
-          state.map?.removeLayer("WalkingRouting");
-        }
-
-        if (state.map?.getLayer("CyclingRouting")) {
-          state.map?.removeSource("CyclingRouting");
-          state.map?.removeLayer("CyclingRouting");
-        }
-
-        state.map?.addSource("WalkingRouting", sourceData);
-        // Configuramos el estilo de la polyline
-        state.map?.addLayer({
-          id: "WalkingRouting",
-          type: "line",
-          source: "WalkingRouting",
-          layout: {
-            "line-cap": "square",
-            "line-join": "round",
-          },
-          paint: {
-            "line-color": "red",
-            "line-width": 4,
-          },
-        });
-        return;
-      case "cycling":
-        // Eliminamos la polyline si ya existe
-        if (state.map?.getLayer("CyclingRouting")) {
-          state.map?.removeSource("CyclingRouting");
-          state.map?.removeLayer("CyclingRouting");
-        }
-        if (state.map?.getLayer("DrivingRouting")) {
-          state.map?.removeLayer("DrivingRouting");
-          state.map?.removeSource("DrivingRouting");
-        }
-
-        if (state.map?.getLayer("WalkingRouting")) {
-          state.map?.removeSource("WalkingRouting");
-          state.map?.removeLayer("WalkingRouting");
-        }
-
-
-        state.map?.addSource("CyclingRouting", sourceData);
-        // Configuramos el estilo de la polyline
-        state.map?.addLayer({
-          id: "CyclingRouting",
-          type: "line",
-          source: "CyclingRouting",
-          layout: {
-            "line-cap": "square",
-            "line-join": "round",
-          },
-          paint: {
-            "line-color": "green",
-            "line-width": 4,
-          },
-        });
-        return;
+          case "cycling":
+            // Eliminamos la polyline si ya existe
+            removeLayersAndSource(state.map!);
+            createLayerAndSource(
+              state,
+              sourceData,
+              "CyclingRouting",
+              "green"
+            );
+            return;
+      }
+      return
     }
+
+    // Se llama esta funcion ya que el routeProfile es driving
+    createLayerAndSource(state, sourceData, "DrivingRouting", "black");
   };
 
   const getRouteBetweenProvider = async ( start: [number, number], end: [number, number]) => {
     
-    const response = await directionService(routingProfile,start, end);
+    const routeDefault = "driving"
+    const response = await directionService(routeDefault, start, end);
     const { geometry } = response.routes[0];
     const { coordinates } = geometry;
-    
-
-    //TODO: Crear una funcion aparte
-    // let kilometers: number;
-    //Conversion de los kilometros
-    // kilometers = distance / 1000;
-    // kilometers = Math.round(kilometers * 1000);
-    // kilometers = kilometers / 1000;
-
-    // Total del tiempo
-    // const minutes: number = Math.floor(duration / 60);
-
-    // console.log({kilometers, minutes});
 
     // Creamos los bounce para que el mapa se posione en la posicion entre dos puntos
     const bounds = new LngLatBounds(start, start);
