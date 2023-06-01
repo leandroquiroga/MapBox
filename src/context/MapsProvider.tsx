@@ -1,11 +1,11 @@
 import { useContext, useEffect, useReducer, useState } from 'react';
 import { AnySourceData, LngLatBounds, Map, Marker, Popup } from 'mapbox-gl';
 
-import { MapProps, MapState, ReponseDirections } from '../interfaces/interfaces';
+import { MapProps, MapState } from '../interfaces/interfaces';
 import { MapsContext } from "./MapsContext";
 import { mapReducer } from "./mapsReducer";
 import { PlacesContext } from '.';
-import { directionsApi } from '../api';
+import { directionService } from '../services/direction_services';
 
 const INITIAL_STATE: MapState = {
   isMapReady: false,
@@ -18,8 +18,8 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
   const [state, dispatch] = useReducer(mapReducer, INITIAL_STATE);
   const { places } = useContext(PlacesContext);
   const [routingProfile, setRoutingProfile] = useState<string>("driving");
-  const [bookmarked, setBookmarked] = useState<boolean>(false)
-
+  const [bookmarked, setBookmarked] = useState<boolean>(false);
+  const [placeCurrent, setPlaceCurrent] = useState<[number, number]>([0,0]);
 
   useEffect(() => {
     if (places.length === 0) setBookmarked(false)
@@ -73,18 +73,140 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
     dispatch({ type: 'setMap', payload: map })
   };
 
+  const createPolyline = (coordinates: number[]) => {
+    //Configuracion de la polyline
+    const sourceData: AnySourceData = {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "LineString",
+              coordinates,
+            },
+          },
+        ],
+      },
+    };
+
+    // TODO: Verificar el error de eliminar el routing profile existente de manera mas eficiente
+    switch (routingProfile) {
+      case "driving":
+        //TODO: Preguntar si ya existe, si existe elimarlo;
+        // Eliminamos la polyline si ya existe
+        if (state.map?.getLayer("WalkingRouting")) {
+          state.map?.removeSource("WalkingRouting");
+          state.map?.removeLayer("WalkingRouting");
+        }
+        if (state.map?.getLayer("DrivingRouting")) {
+          state.map?.removeLayer("DrivingRouting");
+          state.map?.removeSource("DrivingRouting");
+        }
+
+
+        if (state.map?.getLayer("CyclingRouting")) {
+          state.map?.removeSource("CyclingRouting");
+          state.map?.removeLayer("CyclingRouting");
+        }
+
+
+        state.map?.addSource("DrivingRouting", sourceData);
+        // Configuramos el estilo de la polyline
+        state.map?.addLayer({
+          id: "DrivingRouting",
+          type: "line",
+          source: "DrivingRouting",
+          layout: {
+            "line-cap": "square",
+            "line-join": "round",
+          },
+          paint: {
+            "line-color": "black",
+            "line-width": 4,
+          },
+        });
+        return;
+      case "walking":
+        // Eliminamos la polyline si ya existe
+        if (state.map?.getLayer("DrivingRouting")) {
+          state.map?.removeLayer("DrivingRouting");
+          state.map?.removeSource("DrivingRouting");
+        }
+
+        if (state.map?.getLayer("WalkingRouting")) {
+          state.map?.removeSource("WalkingRouting");
+          state.map?.removeLayer("WalkingRouting");
+        }
+
+        if (state.map?.getLayer("CyclingRouting")) {
+          state.map?.removeSource("CyclingRouting");
+          state.map?.removeLayer("CyclingRouting");
+        }
+
+        state.map?.addSource("WalkingRouting", sourceData);
+        // Configuramos el estilo de la polyline
+        state.map?.addLayer({
+          id: "WalkingRouting",
+          type: "line",
+          source: "WalkingRouting",
+          layout: {
+            "line-cap": "square",
+            "line-join": "round",
+          },
+          paint: {
+            "line-color": "red",
+            "line-width": 4,
+          },
+        });
+        return;
+      case "cycling":
+        // Eliminamos la polyline si ya existe
+        if (state.map?.getLayer("CyclingRouting")) {
+          state.map?.removeSource("CyclingRouting");
+          state.map?.removeLayer("CyclingRouting");
+        }
+        if (state.map?.getLayer("DrivingRouting")) {
+          state.map?.removeLayer("DrivingRouting");
+          state.map?.removeSource("DrivingRouting");
+        }
+
+        if (state.map?.getLayer("WalkingRouting")) {
+          state.map?.removeSource("WalkingRouting");
+          state.map?.removeLayer("WalkingRouting");
+        }
+
+
+        state.map?.addSource("CyclingRouting", sourceData);
+        // Configuramos el estilo de la polyline
+        state.map?.addLayer({
+          id: "CyclingRouting",
+          type: "line",
+          source: "CyclingRouting",
+          layout: {
+            "line-cap": "square",
+            "line-join": "round",
+          },
+          paint: {
+            "line-color": "green",
+            "line-width": 4,
+          },
+        });
+        return;
+    }
+  };
+
   const getRouteBetweenProvider = async ( start: [number, number], end: [number, number]) => {
     
-    // let kilometers: number;
-    
-    const response = await directionsApi.get<ReponseDirections>(
-      `/${routingProfile}/${start.join(",")};${end.join(",")}`
-    );
-
-    const { geometry } = response.data.routes[0];
+    const response = await directionService(routingProfile,start, end);
+    const { geometry } = response.routes[0];
     const { coordinates } = geometry;
-
     
+
+    //TODO: Crear una funcion aparte
+    // let kilometers: number;
     //Conversion de los kilometros
     // kilometers = distance / 1000;
     // kilometers = Math.round(kilometers * 1000);
@@ -109,46 +231,7 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
       zoom: 12,
     });
 
-    //Configuracion de la polyline
-    const sourceData: AnySourceData = {
-      type: "geojson",
-      data: {
-        type: "FeatureCollection",
-        features: [
-          {
-            type: "Feature",
-            properties: {},
-            geometry: {
-              type: "LineString",
-              coordinates,
-            },
-          },
-        ],
-      },
-    };
-
-    // Eliminamos la polyline si ya existe 
-    if (state.map?.getLayer("RouteString")) {
-      state.map?.removeLayer("RouteString");
-      state.map?.removeSource("RouteString");
-    }
-      state.map?.addSource("RouteString", sourceData);
-
-    // Configuramos el estilo de la polyline
-    state.map?.addLayer({
-      id: "RouteString",
-      type: "line",
-      source: "RouteString",
-      layout: {
-        'line-cap': 'square',
-        'line-join': 'round',
-      },
-      paint: {
-        'line-color': 'black',
-        'line-width': 4,
-      }
-    });
-
+    createPolyline(coordinates);
   };
 
   
@@ -162,6 +245,9 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
         bookmarked,
         setBookmarked,
         getRouteBetweenProvider,
+        placeCurrent,
+        setPlaceCurrent,
+        createPolyline
       }}>
       {children}
     </MapsContext.Provider>
