@@ -209,7 +209,7 @@ export interface MapsContextProps {
   setBookmarked: Dispatch<SetStateAction<boolean>>;
   placeCurrent: [number, number];
   setPlaceCurrent: Dispatch<SetStateAction<[number, number]>>;
-  createPolyline: (coordinates: number[]) => void;
+  createPolyline: (coordinates: number[], route?: string) => void;
 }
 
 
