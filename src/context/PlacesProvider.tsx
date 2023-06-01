@@ -19,7 +19,6 @@ export const PlacesProvider = ({ children }: PlacesProps) => {
   const [inputValue, setInputValue] = useState<string>('');
   const [showFooter, setShowFooter] = useState<boolean>(false);
 
-  const toogleShowComponent = () => setShowFooter(!showFooter);
 
   useEffect(() => { 
     getUserLocation()
@@ -64,7 +63,6 @@ export const PlacesProvider = ({ children }: PlacesProps) => {
         setInputValue,
         showFooter,
         setShowFooter,
-        toogleShowComponent,
       }}>
       {children}
     </PlacesContext.Provider>

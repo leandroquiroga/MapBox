@@ -9,15 +9,14 @@ export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<
     isLoadingPlaces,
     userLocation,
     setInputValue,
-    toogleShowComponent
+    setShowFooter
   } = useContext(PlacesContext);
   const {
     isMapReady,
     map,
     getRouteBetweenProvider,
-    routingProfile,
-    setRoutingProfile,
     setBookmarked,
+    setPlaceCurrent,
   } = useContext(MapsContext);
   const [placeID, setPlaceID] = useState("");
 
@@ -47,6 +46,8 @@ export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<
     if (!userLocation) return;
     // Extrameos la longitud y latitud del destino
     const [lng, lat] = place.center;
+    // Seteamos la coordenadas actuales del actual lugar
+    setPlaceCurrent([lng, lat]);
 
     //TODO: Chequar si el mapa esta cargado
     if (!isLoadingPlaces) {
@@ -58,7 +59,7 @@ export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<
       setPlaceContainer(false);
 
       //TODO: Cambiar el toogle, ya que no es conveninte para ciertas vistas
-      // toogleShowComponent()
+      setShowFooter(true)
     }
   };
   if (isLoadingPlaces) {
