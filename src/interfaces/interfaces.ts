@@ -185,7 +185,6 @@ export interface PlacesContextProps {
   showFooter: boolean;
   setShowFooter: Dispatch<SetStateAction<boolean>>;
   searchPlacesByQuery: (query: string) => Promise<Feature[]>;
-  toogleShowComponent: () => void;
 }
 
 export interface MapProps {
@@ -208,6 +207,9 @@ export interface MapsContextProps {
   setRoutingProfile: Dispatch<SetStateAction<string>>;
   bookmarked: boolean;
   setBookmarked: Dispatch<SetStateAction<boolean>>;
+  placeCurrent: [number, number];
+  setPlaceCurrent: Dispatch<SetStateAction<[number, number]>>;
+  createPolyline: (coordinates: number[]) => void;
 }
 
 
