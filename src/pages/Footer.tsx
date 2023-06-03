@@ -1,6 +1,6 @@
 import { useContext } from "react"
 import { MapsContext, PlacesContext } from "../context"
-import { ButtonRoutingProfile } from "../components";
+import { ButtonRoutingProfile, RoutesInstructions } from "../components";
 
 export const Footer = () => {
   const { setShowFooter, showFooter } = useContext(PlacesContext);
@@ -21,10 +21,7 @@ export const Footer = () => {
       </section>
 
       <section className="d-flex justify-content-center flex-column align-items-center">
-        <article>1</article>
-        <article>1</article>
-        <article>1</article>
-        <article>1</article>
+        <RoutesInstructions />
       </section>
     </footer>
   );

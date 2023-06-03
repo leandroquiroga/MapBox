@@ -186,7 +186,6 @@ export interface PlacesContextProps {
   setShowFooter: Dispatch<SetStateAction<boolean>>;
   searchPlacesByQuery: (query: string) => Promise<Feature[]>;
 }
-
 export interface MapProps {
   children: JSX.Element | JSX.Element[];
 }
@@ -197,6 +196,8 @@ export interface MapState {
 }
 export interface MapsContextProps {
   isMapReady: boolean;
+  instructions?: RouteInstructions;
+  setInstructions: ( value: React.SetStateAction<RouteInstructions | undefined> ) => void;
   map?: Map;
   setMap: (map: Map) => void;
   getRouteBetweenProvider: (
@@ -212,10 +213,18 @@ export interface MapsContextProps {
   createPolyline: (coordinates: number[], route?: string) => void;
 }
 
+export type MapAction =
+  | { type: "setMap"; payload: Map }
+  | { type: "setMarkers"; payload: Marker[] }
+  | { type: "setRoutingInstructions"; payload: RouteInstructions };
 
 export interface RoutingProfile {
   trafic: string;
   driving: string;
   walking: string;
   cycling: string;
+}
+export interface RouteInstructions {
+  waypoints: Waypoint[];
+  routes: Route[]
 }

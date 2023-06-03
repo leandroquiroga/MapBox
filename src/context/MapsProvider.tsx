@@ -2,18 +2,12 @@
 import { useContext, useEffect, useReducer, useState } from 'react';
 import { LngLatBounds, Map, Marker, Popup } from 'mapbox-gl';
 
-import { MapProps, MapState } from '../interfaces/interfaces';
+import { MapProps, RouteInstructions } from '../interfaces/interfaces';
 import { MapsContext } from "./MapsContext";
 import { mapReducer } from "./mapsReducer";
 import { PlacesContext } from '.';
 import { directionService } from '../services/direction_services';
-import { removeLayersAndSource, createSourceData, createLayerAndSource } from "../helpers";
-
-const INITIAL_STATE: MapState = {
-  isMapReady: false,
-  map: undefined,
-  markers: [],
-};
+import { removeLayersAndSource, createSourceData, createLayerAndSource, INITIAL_STATE } from "../helpers";
 
 export const MapsProvider = ({children}: MapProps): JSX.Element => {
   
@@ -21,7 +15,8 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
   const { places } = useContext(PlacesContext);
   const [routingProfile, setRoutingProfile] = useState<string>("driving");
   const [bookmarked, setBookmarked] = useState<boolean>(false);
-  const [placeCurrent, setPlaceCurrent] = useState<[number, number]>([0,0]);
+  const [placeCurrent, setPlaceCurrent] = useState<[number, number]>([0, 0]);
+  const [instructions, setInstructions] = useState<RouteInstructions>();
 
   useEffect(() => {
     if (places.length === 0) setBookmarked(false)
@@ -120,9 +115,12 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
     
     const routeDefault = "driving"
     const response = await directionService(routeDefault, start, end);
-    const { geometry } = response.routes[0];
+    const { routes, waypoints } = response;
+    const { geometry } = routes[0];
     const { coordinates } = geometry;
 
+    setInstructions({ routes, waypoints });
+    
     // Creamos los bounce para que el mapa se posione en la posicion entre dos puntos
     const bounds = new LngLatBounds(start, start);
 
@@ -145,6 +143,8 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
     <MapsContext.Provider
       value={{
         ...state,
+        instructions,
+        setInstructions,
         setMap,
         routingProfile,
         setRoutingProfile,

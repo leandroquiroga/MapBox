@@ -49,16 +49,11 @@ export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<
     // Seteamos la coordenadas actuales del actual lugar
     setPlaceCurrent([lng, lat]);
 
-    //TODO: Chequar si el mapa esta cargado
+    //Chequar si el mapa esta cargado
     if (!isLoadingPlaces) {
-      //TODO: Activar un componente checkbox para seleccionar el tipo de ruta
       setBookmarked(true);
-      //TODO: Setear la opcion seleccionada por el usuario para hacer la peticion
       getRouteBetweenProvider(userLocation, [lng, lat]);
-
       setPlaceContainer(false);
-
-      //TODO: Cambiar el toogle, ya que no es conveninte para ciertas vistas
       setShowFooter(true)
     }
   };
