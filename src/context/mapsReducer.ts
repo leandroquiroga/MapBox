@@ -1,10 +1,4 @@
-import { Map, Marker } from "mapbox-gl";
-import { MapState } from "../interfaces/interfaces";
-
-type MapAction =
-  | { type: 'setMap', payload: Map }
-  | { type: 'setMarkers', payload: Marker[] };
-
+import { MapAction, MapState } from "../interfaces/interfaces";
 
 export const mapReducer = (state: MapState, action: MapAction): MapState => {
 
@@ -21,6 +15,11 @@ export const mapReducer = (state: MapState, action: MapAction): MapState => {
       return {
         ...state,
         markers: action.payload
+      }
+    case 'setRoutingInstructions': 
+      return {
+        ...state,
+        instructions: action.payload
       }
     default:
       return state
