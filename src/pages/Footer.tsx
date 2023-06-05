@@ -19,10 +19,7 @@ export const Footer = () => {
         {bookmarked && <ButtonRoutingProfile />}
         <button className="btn btn-close" onClick={handleHidenMenu}></button>
       </section>
-
-      <section className="d-flex justify-content-center flex-column align-items-center">
-        <RoutesInstructions />
-      </section>
+      <RoutesInstructions />
     </footer>
   );
 }

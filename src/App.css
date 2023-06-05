@@ -15,9 +15,9 @@
 }
 
 .footer_container_full {
-  display: flex;
+  /* display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
   background-color: #FFF;
   transition: opacity 1s;
   position: fixed;
