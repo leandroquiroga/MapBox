@@ -196,7 +196,7 @@ export interface MapState {
 }
 export interface MapsContextProps {
   isMapReady: boolean;
-  instructions?: RouteInstructions;
+  instructions: RouteInstructions;
   setInstructions: ( value: React.SetStateAction<RouteInstructions | undefined> ) => void;
   map?: Map;
   setMap: (map: Map) => void;
