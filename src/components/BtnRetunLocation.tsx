@@ -16,7 +16,7 @@ export const BtnRetunLocation = () => {
     map?.flyTo({
       zoom: 14,
       center: userLocation,
-      essential: true
+      padding: 100
     })
   };
 
@@ -27,8 +27,8 @@ export const BtnRetunLocation = () => {
       onClick={handleLocation}
       style={{
         position: "fixed",
-        bottom: "40px",
-        right: "15px",
+        bottom: "50px",
+        left: "15px",
         zIndex: 1000,
         borderRadius: "80%",
         margin: 0,

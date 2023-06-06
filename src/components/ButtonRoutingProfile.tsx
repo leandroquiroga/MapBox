@@ -28,7 +28,7 @@ export const ButtonRoutingProfile = (): JSX.Element => {
       {arrRoutingProfile.map((route, index) => (
         <button
           value={route}
-          className="btn btn-primary btn-sm my-1 mx-2 rounded-3"
+          className="btn btn-primary my-1 mx-2 rounded-3"
           key={index}
           onClick={() => handleRoute(route)}>
           <IconButton routeProfile={route} />

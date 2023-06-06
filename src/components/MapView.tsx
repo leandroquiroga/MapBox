@@ -7,7 +7,7 @@ import { Loading } from ".";
 export const MapView = (): JSX.Element => {
 
   const [localitation, setLocalitation] = useState<number[]>();
-  const { isLoading, userLocation, showFooter } = useContext(PlacesContext);
+  const { isLoading, userLocation } = useContext(PlacesContext);
   const { setMap } = useContext(MapsContext);
   // Mantenemos la referencia del elemento ya que puede existir mas de un
   // mapa, es por eso que se utiliza la referencia del elemento
@@ -24,13 +24,12 @@ export const MapView = (): JSX.Element => {
         container: mapDiv.current!,
         style: "mapbox://styles/mapbox/streets-v12",
         center: userLocation,
-        zoom: 14,
+        zoom: 12,
+        pitch: 0, 
       });
 
       setMap(map);
     }
-
-    // Eliminamos la polyline si ya existe
   }, [isLoading, userLocation]);
 
 
@@ -43,7 +42,7 @@ export const MapView = (): JSX.Element => {
     <>
       <section
         ref={mapDiv}
-        className={`${showFooter ? `container_map` : `container_map_full`}`}>
+        className="container_map_full">
         {localitation?.join(", ")}
       </section>
     </>

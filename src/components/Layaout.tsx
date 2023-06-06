@@ -2,17 +2,19 @@ import { useContext } from "react";
 import {
   BtnRetunLocation,
   MapView,
-  SearchLocation
+  SearchLocation,
+  Aside
 } from "./";
 import { PlacesContext } from "../context";
 
 export const Layaout = () => {
-  const { showFooter } = useContext(PlacesContext);
+  const { showAside } = useContext(PlacesContext);
   return (
-    <main className={`${showFooter ? `container_map` : `container_map_full`}`}>
+    <main className="container_map_full">
       <MapView />
       <BtnRetunLocation />
       <SearchLocation />
+      {showAside && <Aside />}
     </main>
   );
 }

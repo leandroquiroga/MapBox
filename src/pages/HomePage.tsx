@@ -1,11 +1,5 @@
-import { Layaout} from "../components";
-import { Footer } from "./Footer";
+import { Layaout } from "../components";
 
 export const HomePage = (): JSX.Element => {
-  return (
-    <section>
-      <Layaout />
-      <Footer />
-    </section>
-  );
+  return <Layaout />
 }

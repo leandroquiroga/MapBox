@@ -129,10 +129,13 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
       bounds.extend(newCoord);
     }
 
+    // Jugar con la distacia para controlar el zoom, padding y los efectos
     state.map?.fitBounds(bounds, {
       animate: true,
-      padding: 200,
-      zoom: 12,
+      padding: {bottom: 100, left:100, right: 200, top:100},
+      zoom: routes[0].distance < 4000 ? 13 : 11,
+      pitch: 55,
+      bearing: -30
     });
 
     createPolyline(coordinates);
