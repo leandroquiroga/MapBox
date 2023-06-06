@@ -17,7 +17,8 @@ export const PlacesProvider = ({ children }: PlacesProps) => {
 
   const [state, dispatch] = useReducer(placesReducer, INITAL_STATE);
   const [inputValue, setInputValue] = useState<string>('');
-  const [showFooter, setShowFooter] = useState<boolean>(false);
+  const [showAside, setShowAside] = useState<boolean>(false);
+  const [infoPlaces, setInfoPlaces] = useState<string>('');
 
 
   useEffect(() => { 
@@ -61,8 +62,10 @@ export const PlacesProvider = ({ children }: PlacesProps) => {
         searchPlacesByQuery,
         inputValue,
         setInputValue,
-        showFooter,
-        setShowFooter,
+        showAside,
+        setShowAside,
+        infoPlaces,
+        setInfoPlaces,
       }}>
       {children}
     </PlacesContext.Provider>
