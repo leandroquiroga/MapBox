@@ -181,10 +181,12 @@ export interface PlacesContextProps {
   isLoadingPlaces: boolean;
   places: Feature[];
   inputValue: string;
+  showAside: boolean;
+  infoPlaces: string;
   setInputValue: Dispatch<SetStateAction<string>>;
-  showFooter: boolean;
-  setShowFooter: Dispatch<SetStateAction<boolean>>;
+  setShowAside: Dispatch<SetStateAction<boolean>>;
   searchPlacesByQuery: (query: string) => Promise<Feature[]>;
+  setInfoPlaces: Dispatch<SetStateAction<string>>;
 }
 export interface MapProps {
   children: JSX.Element | JSX.Element[];
