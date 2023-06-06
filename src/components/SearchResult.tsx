@@ -9,7 +9,8 @@ export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<
     isLoadingPlaces,
     userLocation,
     setInputValue,
-    setShowFooter
+    setShowAside,
+    setInfoPlaces
   } = useContext(PlacesContext);
   const {
     isMapReady,
@@ -27,8 +28,9 @@ export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<
       map?.flyTo({
         zoom: 12,
         center: [lng, lat],
-        essential: true,
-        padding: 100
+        animate: true,
+        bearing: 30,
+        pitch:79
       });
 
       setInputValue(place.text_es);
@@ -49,12 +51,14 @@ export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<
     // Seteamos la coordenadas actuales del actual lugar
     setPlaceCurrent([lng, lat]);
 
+    // Seteamos la informacion del destino 
+    setInfoPlaces(place.place_name_es)
     //Chequar si el mapa esta cargado
     if (!isLoadingPlaces) {
       setBookmarked(true);
       getRouteBetweenProvider(userLocation, [lng, lat]);
       setPlaceContainer(false);
-      setShowFooter(true)
+      setShowAside(true)
     }
   };
   if (isLoadingPlaces) {
