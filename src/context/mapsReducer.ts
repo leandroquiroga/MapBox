@@ -3,25 +3,29 @@ import { MapAction, MapState } from "../interfaces/interfaces";
 export const mapReducer = (state: MapState, action: MapAction): MapState => {
 
   switch (action.type) {
-    case 'setMap':
-
+    case "setMap":
       return {
-        ...state, 
+        ...state,
         isMapReady: true,
-        map: action.payload
-      }
+        map: action.payload,
+      };
 
-    case 'setMarkers':
+    case "setMarkers":
       return {
         ...state,
-        markers: action.payload
-      }
-    case 'setRoutingInstructions': 
+        markers: action.payload,
+      };
+    case "clearMarkers":
       return {
         ...state,
-        instructions: action.payload
-      }
+        markers: [],
+      };
+    case "setRoutingInstructions":
+      return {
+        ...state,
+        instructions: action.payload,
+      };
     default:
-      return state
+      return state;
   }
 };
