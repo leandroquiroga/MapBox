@@ -7,11 +7,16 @@ import { MapsContext } from "./MapsContext";
 import { mapReducer } from "./mapsReducer";
 import { PlacesContext } from '.';
 import { directionService } from '../services/direction_services';
-import { removeLayersAndSource, createSourceData, createLayerAndSource, INITIAL_STATE } from "../helpers";
+import {
+  removeLayersAndSource,
+  createSourceData,
+  createLayerAndSource,
+  INITIAL_STATE_MAP,
+} from "../helpers";
 
 export const MapsProvider = ({children}: MapProps): JSX.Element => {
   
-  const [state, dispatch] = useReducer(mapReducer, INITIAL_STATE);
+  const [state, dispatch] = useReducer(mapReducer, INITIAL_STATE_MAP);
   const { places } = useContext(PlacesContext);
   const [routingProfile, setRoutingProfile] = useState<string>("driving");
   const [bookmarked, setBookmarked] = useState<boolean>(false);
@@ -19,7 +24,9 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
   const [instructions, setInstructions] = useState<RouteInstructions>();
 
   useEffect(() => {
-    if (places.length === 0) setBookmarked(false)
+    if (places.length === 0) {
+      setBookmarked(false);
+    }
   }, [places]);
 
   useEffect(() => {
@@ -111,6 +118,17 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
     createLayerAndSource(state, sourceData, "DrivingRouting", "black");
   };
 
+  // Mediante la distacia entre los dos punto devuelve ciertos valores para los estilos
+  const createStyleOfFitBound = (distance: number, valueConditional: number, x: number, y: number) => {
+    //x & y ==> representan un valor numerico que indicara que valor se le asignara a un estilo
+    //valueConditional ==> es un valor numerico que permite evaluar la distancia de la ruta entre dos puntos
+
+    if (distance < valueConditional) {
+      return x
+    }
+    return y
+  };
+
   const getRouteBetweenProvider = async ( start: [number, number], end: [number, number]) => {
     
     const routeDefault = "driving"
@@ -132,10 +150,11 @@ export const MapsProvider = ({children}: MapProps): JSX.Element => {
     // Jugar con la distacia para controlar el zoom, padding y los efectos
     state.map?.fitBounds(bounds, {
       animate: true,
-      padding: {bottom: 100, left:100, right: 200, top:100},
-      zoom: routes[0].distance < 4000 ? 13 : 11,
-      pitch: 55,
-      bearing: -30
+      padding: 100,
+      zoom: createStyleOfFitBound(routes[0].distance, 6000, 13, 11), //routes[0].distance < 6000 ? 13 : 11,
+      pitch: createStyleOfFitBound(routes[0].distance, 6000, 15, 55), //55,
+      bearing: createStyleOfFitBound(routes[0].distance, 6000, 10, -30),// -30,
+      
     });
 
     createPolyline(coordinates);
