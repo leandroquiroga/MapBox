@@ -195,6 +195,7 @@ export interface MapState {
   isMapReady: boolean;
   map?: Map;
   markers: Marker[];
+  instructions: RouteInstructions | [];
 }
 export interface MapsContextProps {
   isMapReady: boolean;
@@ -218,7 +219,8 @@ export interface MapsContextProps {
 export type MapAction =
   | { type: "setMap"; payload: Map }
   | { type: "setMarkers"; payload: Marker[] }
-  | { type: "setRoutingInstructions"; payload: RouteInstructions };
+  | { type: "setRoutingInstructions"; payload: RouteInstructions }
+  | { type: "clearMarkers"; payload: [] };
 
 export interface RoutingProfile {
   trafic: string;
