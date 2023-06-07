@@ -1,10 +1,11 @@
 import { useContext } from "react";
 import { MapsContext, PlacesContext } from "../context";
 import logoLocation from '../assets/location.svg';
+import { removeLayersAndSource } from "../helpers";
 
 export const BtnRetunLocation = () => {
 
-  const { userLocation } = useContext(PlacesContext);
+  const { userLocation, setShowAside, setInputValue, setInfoPlaces } = useContext(PlacesContext);
   const { isMapReady, map } = useContext(MapsContext);
 
   const handleLocation = () => {
@@ -17,7 +18,12 @@ export const BtnRetunLocation = () => {
       zoom: 14,
       center: userLocation,
       padding: 100
-    })
+    });
+
+    setShowAside(false);
+    setInputValue('');
+    removeLayersAndSource(map!);
+    setInfoPlaces('');
   };
 
 
