@@ -1,21 +1,14 @@
 import { useEffect, useReducer, useState } from "react";
 import { PlacesContext } from "."
-import { Feature, PlacesProps, PlacesStates, ResponseLocation } from "../interfaces/interfaces"
+import { Feature, PlacesProps, ResponseLocation } from "../interfaces/interfaces"
 import { placesReducer } from "./placesReducer";
-import { getUserLocation } from "../helpers";
+import { INITAL_STATE_PLACES, getUserLocation } from "../helpers";
 import { searchApi } from "../api";
 
-// Informacion que se almacena en memoria
-const INITAL_STATE: PlacesStates = {
-  isLoading: true,
-  userLocation: undefined,
-  isLoadingPlaces: false,
-  places: []
-}
 
 export const PlacesProvider = ({ children }: PlacesProps) => {
 
-  const [state, dispatch] = useReducer(placesReducer, INITAL_STATE);
+  const [state, dispatch] = useReducer(placesReducer, INITAL_STATE_PLACES );
   const [inputValue, setInputValue] = useState<string>('');
   const [showAside, setShowAside] = useState<boolean>(false);
   const [infoPlaces, setInfoPlaces] = useState<string>('');

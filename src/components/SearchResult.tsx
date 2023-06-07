@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useContext, useState } from "react"
 import { MapsContext, PlacesContext } from "../context"
 import { Spinner } from "./";
 import { Feature } from "../interfaces/interfaces";
+import { removeLayersAndSource } from '../helpers';
 
 export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<SetStateAction<boolean>>}) => {
   const {
@@ -26,11 +27,9 @@ export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<
       const [lng, lat] = place.center;
       setPlaceID(place.id);
       map?.flyTo({
-        zoom: 12,
+        zoom: 14,
         center: [lng, lat],
         animate: true,
-        bearing: 30,
-        pitch:79
       });
 
       setInputValue(place.text_es);
@@ -59,6 +58,7 @@ export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<
       getRouteBetweenProvider(userLocation, [lng, lat]);
       setPlaceContainer(false);
       setShowAside(true)
+      removeLayersAndSource(map!)
     }
   };
   if (isLoadingPlaces) {
