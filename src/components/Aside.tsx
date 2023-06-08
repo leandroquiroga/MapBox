@@ -3,6 +3,7 @@ import { MapsContext, PlacesContext } from "../context";
 import { calculatorDistanceAndMinutes } from "../helpers";
 import { Step } from "../interfaces/interfaces";
 import { ButtonRoutingProfile } from ".";
+import { removeLayersAndSource } from '../helpers';
 
 type DistanceAndTime = {
   kilometers: number;
@@ -17,7 +18,7 @@ export const Aside = () => {
     kilometers: 0,
     minutes: 0,
   });
-  const { instructions, bookmarked } = useContext(MapsContext);
+  const { instructions, bookmarked, setInstructions, map } = useContext(MapsContext);
   const { showAside, setShowAside, infoPlaces, setInfoPlaces } = useContext(PlacesContext);
 
   useEffect(() => {
@@ -38,6 +39,8 @@ export const Aside = () => {
     setDistance(0);
     setTimeDistance({ kilometers: 0, minutes: 0 });
     setInfoPlaces('');
+    setInstructions({ routes: [], waypoints: [] });
+    removeLayersAndSource(map!)
   }
 
   return (
