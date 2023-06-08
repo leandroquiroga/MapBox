@@ -1,9 +1,9 @@
 import { useEffect, useReducer, useState } from "react";
 import { PlacesContext } from "."
-import { Feature, PlacesProps, ResponseLocation } from "../interfaces/interfaces"
+import { Feature, PlacesProps } from "../interfaces/interfaces"
 import { placesReducer } from "./placesReducer";
 import { INITAL_STATE_PLACES, getUserLocation } from "../helpers";
-import { searchApi } from "../api";
+import { searchServices } from '../services/searchApi_services';
 
 
 export const PlacesProvider = ({ children }: PlacesProps) => {
@@ -29,23 +29,15 @@ export const PlacesProvider = ({ children }: PlacesProps) => {
     if (query.length === 0) {
       dispatch({type:"setPlaces", payload: []});
       return []
-    } //TODO: Limpiar state
-
+    }
     // Verifica si la ubicacion no existe
     if (!state.userLocation) throw new Error('La ubicacion no existe');
-
     // Setea la carga de los places
     dispatch({ type: "setLoadingPlaces" });
-
-    const response = await searchApi.get<ResponseLocation>(`/${query}.json`, {
-      params: {
-        proximity: state.userLocation.join(","),
-      },
-    });
-    
+    const response = await searchServices(query, state);
     // Setea los places 
-    dispatch({ type: 'setPlaces', payload: response.data.features });
-    return response.data.features;
+    dispatch({ type: 'setPlaces', payload: response.features });
+    return response.features;
   };
 
   return (
