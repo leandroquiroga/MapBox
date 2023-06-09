@@ -6,7 +6,7 @@ import { Loading } from ".";
 
 export const MapView = (): JSX.Element => {
 
-  const [localitation, setLocalitation] = useState<number[]>();
+  const [_localitation, setLocalitation] = useState<number[]>();
   const { isLoading, userLocation } = useContext(PlacesContext);
   const { setMap } = useContext(MapsContext);
   // Mantenemos la referencia del elemento ya que puede existir mas de un
@@ -43,7 +43,6 @@ export const MapView = (): JSX.Element => {
       <section
         ref={mapDiv}
         className="container_map_full">
-        {localitation?.join(", ")}
       </section>
     </>
   );
