@@ -1,9 +1,9 @@
 import { useEffect, useReducer, useState } from "react";
-import { PlacesContext } from "."
-import { Feature, PlacesProps } from "../interfaces/interfaces"
+import { PlacesContext } from "./PlacesContext"
+import { Feature, PlacesProps } from "../../interfaces/interfaces"
 import { placesReducer } from "./placesReducer";
-import { INITAL_STATE_PLACES, getUserLocation } from "../helpers";
-import { searchServices } from '../services/searchApi_services';
+import { INITAL_STATE_PLACES, getUserLocation } from "../../helpers";
+import { searchServices } from '../../services';
 
 
 export const PlacesProvider = ({ children }: PlacesProps) => {

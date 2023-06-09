@@ -1,4 +1,4 @@
-import { Feature, PlacesStates } from "../interfaces/interfaces"
+import { Feature, PlacesStates } from "../../interfaces/interfaces"
 
 // La entrada de un reducer no es mas que una funcion pura que recibe el estado y va a regresar 
 // un mismo objeto del estado y ademas las acciones

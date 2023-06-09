@@ -2,17 +2,17 @@
 import { useContext, useEffect, useReducer, useState } from 'react';
 import { LngLatBounds, Map, Marker, Popup } from 'mapbox-gl';
 
-import { MapProps, RouteInstructions } from '../interfaces/interfaces';
+import { MapProps, RouteInstructions } from '../../interfaces/interfaces';
 import { MapsContext } from "./MapsContext";
 import { mapReducer } from "./mapsReducer";
-import { PlacesContext } from '.';
-import { directionService } from '../services/direction_services';
+import { PlacesContext } from '../index';
+import { directionService } from '../../services';
 import {
   removeLayersAndSource,
   createSourceData,
   createLayerAndSource,
   INITIAL_STATE_MAP,
-} from "../helpers";
+} from "../../helpers";
 
 export const MapsProvider = ({children}: MapProps): JSX.Element => {
   

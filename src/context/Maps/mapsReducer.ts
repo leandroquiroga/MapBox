@@ -1,4 +1,4 @@
-import { MapAction, MapState } from "../interfaces/interfaces";
+import { MapAction, MapState } from "../../interfaces/interfaces";
 
 export const mapReducer = (state: MapState, action: MapAction): MapState => {
 
