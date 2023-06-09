@@ -8,7 +8,6 @@ export const getUserLocation = async (): Promise<[number, number]> => {
       },
       (err) => {
         alert(err.message);
-        console.log(err);
         reject(err.message);
       }
     );

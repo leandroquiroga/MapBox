@@ -11,7 +11,7 @@ export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<
     userLocation,
     setInputValue,
     setShowAside,
-    setInfoPlaces
+    setInfoPlaces, 
   } = useContext(PlacesContext);
   const {
     isMapReady,
@@ -39,11 +39,10 @@ export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<
     }
   };
 
-  const changeClassName = (place: Feature): boolean =>
-    placeID === place.id ? true : false;
+  const changeClassName = (place: Feature): boolean => placeID === place.id ? true : false;
 
-  // Crea la ruta entre dos puntos
-  const handleGetRoute = (place: Feature) => {
+    // Crea la ruta entre dos puntos
+    const handleGetRoute = (place: Feature) => {
     if (!userLocation) return;
     // Extrameos la longitud y latitud del destino
     const [lng, lat] = place.center;
@@ -52,6 +51,7 @@ export const SearchResult = ({setPlaceContainer }: {setPlaceContainer: Dispatch<
 
     // Seteamos la informacion del destino 
     setInfoPlaces(place.place_name_es)
+    
     //Chequar si el mapa esta cargado
     if (!isLoadingPlaces) {
       setBookmarked(true);

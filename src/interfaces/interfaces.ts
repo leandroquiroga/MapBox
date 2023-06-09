@@ -46,7 +46,7 @@ export enum Language {
 
 export interface Geometry {
   type: string;
-  coordinates: number[];
+  coordinates: [number, number][];
 }
 
 export interface Properties {
@@ -77,7 +77,7 @@ export interface Route {
 }
 
 export interface Geometry {
-  coordinates: number[];
+  coordinates: [number, number][];
   typeline: TypeLine;
 }
 
@@ -195,12 +195,11 @@ export interface MapState {
   isMapReady: boolean;
   map?: Map;
   markers: Marker[];
-  instructions: RouteInstructions | [];
 }
 export interface MapsContextProps {
   isMapReady: boolean;
-  instructions: RouteInstructions;
-  setInstructions: ( value: React.SetStateAction<RouteInstructions | undefined> ) => void;
+  instructions?: RouteInstructions;
+  setInstructions: (value: RouteInstructions) => void;
   map?: Map;
   setMap: (map: Map) => void;
   getRouteBetweenProvider: (
@@ -213,13 +212,12 @@ export interface MapsContextProps {
   setBookmarked: Dispatch<SetStateAction<boolean>>;
   placeCurrent: [number, number];
   setPlaceCurrent: Dispatch<SetStateAction<[number, number]>>;
-  createPolyline: (coordinates: number[], route?: string) => void;
+  createPolyline: (coordinates: [number, number][], route?: string) => void;
 }
 
 export type MapAction =
   | { type: "setMap"; payload: Map }
   | { type: "setMarkers"; payload: Marker[] }
-  | { type: "setRoutingInstructions"; payload: RouteInstructions }
   | { type: "clearMarkers"; payload: [] };
 
 export interface RoutingProfile {

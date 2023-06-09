@@ -3,8 +3,7 @@ import { MapState, PlacesStates } from "../interfaces/interfaces";
 export const INITIAL_STATE_MAP: MapState = {
   isMapReady: false,
   map: undefined,
-  markers: [],
-  instructions: []
+  markers: []
 };
 
 // Informacion que se almacena en memoria

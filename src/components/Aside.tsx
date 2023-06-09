@@ -22,14 +22,16 @@ export const Aside = () => {
   const { showAside, setShowAside, infoPlaces, setInfoPlaces } = useContext(PlacesContext);
 
   useEffect(() => {
-    setTime(instructions?.routes[0].duration);
-    setDistance(instructions?.routes[0].distance);
-
-    setTimeDistance(calculatorDistanceAndMinutes(distance, time));
-    setSteps(instructions?.routes[0].legs[0].steps);
+    if (instructions) {
+      setTime(instructions.routes[0].duration);
+      setDistance(instructions!.routes[0].distance);
+  
+      setTimeDistance(calculatorDistanceAndMinutes(distance, time));
+      setSteps(instructions!.routes[0].legs[0].steps);
+    }
   }, [time, distance, instructions]);
 
-  const { kilometers, minutes } = timeDistance;
+  const { kilometers, minutes } = timeDistance!;
 
   // Reseteamos todos los valores al cerrar al aside
   const handleCloseOffcanvas = () => {
