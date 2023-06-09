@@ -43,7 +43,6 @@ export const MapView = (): JSX.Element => {
       <section
         ref={mapDiv}
         className="container_map_full">
-        {localitation?.join(", ")}
       </section>
     </>
   );
