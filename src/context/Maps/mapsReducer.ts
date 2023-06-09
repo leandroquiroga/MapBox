@@ -20,11 +20,7 @@ export const mapReducer = (state: MapState, action: MapAction): MapState => {
         ...state,
         markers: [],
       };
-    case "setRoutingInstructions":
-      return {
-        ...state,
-        instructions: action.payload,
-      };
+
     default:
       return state;
   }

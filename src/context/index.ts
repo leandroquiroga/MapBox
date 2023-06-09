@@ -1,4 +1,4 @@
 export { MapsContext } from "./Maps/MapsContext";
-export { MapsProvider } from './MapsProvider';
+export { MapsProvider } from './Maps/MapsProvider';
 export { PlacesContext } from './Places/PlacesContext';
-export { PlacesProvider } from './PlacesProvider';
+export { PlacesProvider } from './Places/PlacesProvider';
